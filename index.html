@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Getting Rest Countries Details</h1>
+
+    <script>
+      var http = new XMLHttpRequest(); //instance or obj creation
+
+      //SENDING REQUEST TO THE API
+      http.open("GET", "https://restcountries.com/v3.1/all");
+      http.send();
+
+      //GETTING RESPONSE OR ERROR FROM THE API
+      //json.parse wil convert string array of objects to array of objects
+      http.onload = () => {
+        if (http.status === 200) {
+          var restcountries = JSON.parse(http.response);
+        // console.log(restcountries);
+
+        //countries in asia
+          const countriesInAsia = restcountries.filter((country) => {
+            if (country.region === "Asia") {
+              return true;
+            }
+          });
+          console.log("COUNTRIES IN ASIA: ", countriesInAsia);
+
+             //population less than 2 lakhs
+          const Population2 = restcountries.filter((country) => {
+            if(country.population < 200000){
+            return true;
+            }
+          });
+          console.log("Population:", Population2);
+          
+         //total population
+          let totalPop=restcountries.reduce((acc,nation)=>{       
+            return acc+nation.population;
+            },0)
+            console.log(`Total Population: ${totalPop}`);
+        
+            //us dollar currency
+            const countriesWithUSD = restcountries.filter(country => country.currencies && country.currencies.USD);
+            // console.log(countriesWithUSD)
+    countriesWithUSD.forEach(country => {
+      console.log("Country:", country.name.common);
+    });
+
+        //to print region,name,capital
+         restcountries.forEach((country) => {
+            console.log("Name: ", country.name.official);
+            console.log("Capital: ", country.capital[0]);
+            console.log("Flag: ", country.flag);
+          });
+ 
+
+          
+
+        } else {
+          console.log("ERROR");
+        }
+      };
+    </script>
+  </body>
+</html>
